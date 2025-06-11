@@ -1,0 +1,30 @@
+{
+  "name": "restaurantdeliveryapp",
+  "version": "1.0.0",
+  "description": "Application for restaurant food delivery",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "keywords": [
+    "restaurant",
+    "food",
+    "delivery",
+    "api"
+  ],
+  "author": "Nikola Popovic",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate": "^0.0.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.10.1",
+    "nodemailer": "^7.0.3",
+    "nodemon": "^3.1.9",
+    "xss-clean": "^0.1.4"
+  }
+}
