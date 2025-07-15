@@ -1,0 +1,39 @@
+.carousel {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 30px auto;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-top: 80px; /* da ne stoji ispod fiksnog navbar-a */
+}
+
+.carousel img {
+  width: 100%;
+  display: block;
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+}
+
+.dot {
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  margin: 0 5px;
+  background-color: #bbb;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 5s;
+}
+
+.dot.active,
+.dot:hover {
+  background-color: var(--primary-color);
+}
+

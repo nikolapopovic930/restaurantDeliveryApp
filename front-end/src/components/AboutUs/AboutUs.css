@@ -1,0 +1,63 @@
+.aboutus-container {
+  display: flex;
+  height: 80vh;
+  max-width: 1200px;
+  margin: 60px auto  /* top margin za prostor ispod navbar-a */;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  padding-top: 60px; /* dodaj padding-top ili ako koristiš margin-top, možeš i ovo izbaciti */
+}
+
+
+.aboutus-text,
+.aboutus-image {
+  flex: 1;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.aboutus-text {
+  border-right: 2px solid #e63946; /* linija između teksta i slike */
+}
+
+.aboutus-text h2 {
+  color: #e63946;
+  margin-bottom: 20px;
+}
+
+.aboutus-text p {
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.aboutus-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Responsivnost */
+@media (max-width: 768px) {
+  .aboutus-container {
+    flex-direction: column;
+    height: auto;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
+  }
+
+  .aboutus-text {
+    border-right: none;
+    padding: 20px;
+  }
+
+  .aboutus-image {
+    padding: 20px;
+  }
+}

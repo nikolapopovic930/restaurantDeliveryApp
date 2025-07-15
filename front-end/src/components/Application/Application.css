@@ -1,0 +1,60 @@
+/* Application.css */
+
+/* Globalne promenljive boja */
+:root {
+  --primary-color: #e63946;       /* crvena */
+  --primary-dark: #d62839;
+  --secondary-color: #1d3557;     /* tamno plava */
+  --secondary-dark: #16324f;
+  --background-color: #f4f4f4;
+  --card-bg: #ffffff;
+  --text-color: #333;
+}
+
+/* Reset i globalni font */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* Linkovi */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+/* Dugmad - generalno */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+  border: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 16px;
+}
+
+/* Scrollbar (opciono) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 4px;
+}
