@@ -57,6 +57,10 @@
   color: var(--primary-color);
 }
 
+.cart-icon {
+  font-size: 20px;
+}
+
 /* Responsive */
 @media screen and (max-width: 768px) {
   .menu-icon {

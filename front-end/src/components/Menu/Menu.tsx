@@ -63,7 +63,7 @@ const Menu: React.FC = () => {
           <div className="menu-items">
             {byCategory(c._id!).map((p) => (
               <div key={p._id} className="menu-item">
-                <img src={`/images${p.imagePath}`} alt={p.name} />
+                <img src={`images${p.imagePath}`} alt={p.name} />
                 <h3>{p.name}</h3>
                 <p>{p.description}</p>
                 <span className="price">{p.price} RSD</span>

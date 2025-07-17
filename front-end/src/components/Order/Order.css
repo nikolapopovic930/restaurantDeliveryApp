@@ -1,0 +1,65 @@
+.order-container {
+  min-height: 91vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--background-color);
+  padding: 20px;
+}
+
+.order-form {
+  background: var(--card-bg);
+  padding: 40px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.order-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--secondary-color);
+}
+
+.order-group {
+  margin-bottom: 20px;
+}
+
+.order-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.order-group input,
+.order-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.order-button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--secondary-color);
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.order-button:hover {
+  background-color: var(--secondary-dark);
+}
+
+@media (max-width: 500px) {
+  .order-form {
+    padding: 30px 20px;
+  }
+}

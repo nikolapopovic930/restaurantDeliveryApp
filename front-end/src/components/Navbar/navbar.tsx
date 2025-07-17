@@ -4,6 +4,7 @@ import "./Navbar.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const cartId = '683851bc7692433464ed548e';
 
   return (
     <nav className="navbar">
@@ -23,6 +24,15 @@ const Navbar = () => {
           <li className="nav-item">
             <Link to="/menu" className="nav-link" onClick={() => setIsOpen(false)}>
               Meni
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link
+              to={`/cart/${cartId}`}
+              className="nav-link cart-icon"
+              onClick={() => setIsOpen(false)}
+            >
+              <i className="fas fa-shopping-cart"></i>
             </Link>
           </li>
           <li className="nav-item">
