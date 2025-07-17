@@ -12,7 +12,7 @@ router
 
 router
   .route('/:id')
-  .get(authController.protect, authController.allowedFor('user'), cartController.getCart)
+  .get(cartController.getCart)
   .patch(authController.protect, authController.allowedFor('user'), cartController.updateCart)
   .delete(authController.protect, authController.allowedFor('admin'), cartController.deleteCart);
 
@@ -24,4 +24,7 @@ router
   .route('/remove')
   .post(authController.protect, authController.allowedFor('user'), cartController.removeFromCart);
 
+router
+  .route('/remove')
+  .get(cartController.getUserCart)
 module.exports = router;
