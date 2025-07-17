@@ -1,0 +1,81 @@
+/* --- GLAVNI WRAPPER --- */
+.home-wrapper {
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;                /* kompaktniji razmak među sekcijama */
+  padding-bottom: 40px;     /* malo zraka ispod features-a */
+}
+
+/* --- CAROUSEL SEKCIJA --- */
+.carousel-section {
+  margin: 0 auto;
+  max-width: 1400px;
+  width: 100%;
+}
+
+/* --- HERO (plain) --- */
+.hero {
+  text-align: center;
+  padding: 70px 20px;
+  background: #fafafa;
+  border-radius: 12px;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw + 1rem, 2.6rem);
+  margin-bottom: 10px;
+}
+
+.hero h1 span { color: #ff6a00; }
+
+.hero p   { margin-bottom: 18px; }
+
+.cta-btn {
+  display: inline-block;
+  background: #ff6a00;
+  color: #fff;
+  padding: 10px 26px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.15s;
+}
+
+.cta-btn:hover { transform: translateY(-2px); }
+
+/* --- FEATURES --- */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 26px 20px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card .emoji {
+  font-size: 2.3rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.feature-card h3 {
+  margin-bottom: 6px;
+  color: #ff6a00;
+}
+

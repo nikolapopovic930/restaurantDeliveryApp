@@ -7,6 +7,7 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import AboutUs from '../AboutUs/AboutUs';
 import Footer from '../Footer/Footer';
+import Menu from '../Menu/Menu';
 
 function Application() {
   return (
@@ -17,8 +18,8 @@ function Application() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/about-us" element={<AboutUs />} />
-
-
+        <Route path="/menu" element={<Menu />} />
+      
       </Routes>
       <Footer />
     </BrowserRouter>

@@ -36,17 +36,17 @@
   display: flex;
   gap: 15px;
   font-size: 20px;
-  color: #e63946;
+  color: #ff6a00;
 }
 
 .social-icon {
-  color: #e63946;
+  color: #ff6a00;
   transition: color 0.3s;
   text-decoration: none;
 }
 
 .social-icon:hover {
-  color: #d62839;
+  color: black;
 }
 
 /* Responsive */

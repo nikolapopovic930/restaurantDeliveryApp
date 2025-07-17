@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const categoryRouter = require('./routes/categoryRoutes');
 const userRouter = require('./routes/userRoutes');
 const productRouter = require('./routes/productRoutes');
@@ -12,6 +13,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 
 const app = express();
+
+app.use(cors());
 
 app.use(helmet());
 

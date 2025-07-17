@@ -1,17 +1,20 @@
 .carousel {
   position: relative;
   width: 100%;
-  max-width: 600px;
-  margin: 30px auto;
+  max-width: 1400px;
+  margin: 0 auto;
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  margin-top: 80px; /* da ne stoji ispod fiksnog navbar-a */
+
+  /* 16:9 odnos drži sliku lepo na svim širinama */
+  aspect-ratio: 16 / 9;
 }
 
 .carousel img {
   width: 100%;
-  display: block;
+  height: 100%;
+  object-fit: cover;
 }
 
 .carousel-dots {
@@ -29,11 +32,8 @@
   background-color: #bbb;
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 5s;
+  transition: background-color .3s;
 }
 
 .dot.active,
-.dot:hover {
-  background-color: var(--primary-color);
-}
-
+.dot:hover { background-color: var(--primary-color, #ff6a00); }
