@@ -1,13 +1,13 @@
 .menu-container {
-  padding: 60px 20px;
+  padding: 80px 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .menu-category {
   margin-bottom: 40px;
+  
 }
-
 .menu-category h2 {
   margin-bottom: 20px;
   color:  black;
@@ -17,7 +17,7 @@
 .menu-items {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 53px;
 }
 
 .menu-item {

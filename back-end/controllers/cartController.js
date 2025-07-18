@@ -131,9 +131,10 @@ exports.calculateTotalCartPrice = async (cartId) => {
   return totalPrice;
 };
 
-exports.getUserCart = catchAsync(async (req, res, next) => {
-
-  const cart = await Cart.findOne({ userId: req.user._id , status: "active" });
+exports.getMyCart = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findById(req.user.cart[0]._id).populate(
+    "products.productId"
+  );
 
   if (!cart) {
     return next(new AppError("Cart for this user does not exist"), 401);
@@ -141,9 +142,15 @@ exports.getUserCart = catchAsync(async (req, res, next) => {
 
   const totalPrice = await this.calculateTotalCartPrice(cart._id);
 
+  for (const item of cart.products) {
+    if (item.productId) {
+      item.price = item.productId.price * item.quantity;
+    }
+  }
+
   res.status(200).json({
     status: "success",
     data: { data: cart },
-    totalPrice
+    totalPrice,
   });
 });

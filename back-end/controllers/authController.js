@@ -4,7 +4,7 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
 const util = require("util");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -40,7 +40,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
         {
           userId: newUser[0]._id,
           status: "active",
-          products: []
+          products: [],
         },
       ],
       { session }
@@ -82,6 +82,7 @@ exports.login = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     token,
+    userId: user._id,
   });
 });
 
@@ -107,10 +108,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   );
 
   const user = await User.findById(decoded.id).populate({
-  path: "cart",
-  match: { status: "active" }
-});
-
+    path: "cart",
+    match: { status: "active" },
+  });
 
   if (!user) {
     return next(

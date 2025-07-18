@@ -17,7 +17,7 @@ const orderSchema = new mongoose.Schema({
     required: [true, "Order must have a cart ID."],
   },
   deliveryInfo: {
-    adress: {
+    address: {
       type: String,
       required: [true, "Delivery info must have an adress."],
       trim: true,

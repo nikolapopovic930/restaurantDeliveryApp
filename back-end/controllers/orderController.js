@@ -98,7 +98,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
       [
         {
           deliveryInfo: {
-            adress: req.body.deliveryInfo.adress,
+            address: req.body.deliveryInfo.address,
             city: req.body.deliveryInfo.city,
             country: req.body.deliveryInfo.country,
             phoneNumber: req.body.deliveryInfo.phoneNumber,

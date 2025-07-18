@@ -6,11 +6,9 @@ import './Menu.css';
 const Menu: React.FC = () => {
   const [categories, setCategories] = useState<ICategories[]>([]);
   const [products, setProducts]     = useState<IProduct[]>([]);
-  const [qty, setQty] = useState<Record<string, number>>({}); // količine po _id‑u
+  const [qty, setQty] = useState<Record<string, number>>({});
 
-  // ------------------------------------------------------------------
-  // FETCH podataka
-  // ------------------------------------------------------------------
+
   useEffect(() => {
     const parse = async (r: Response, lbl: string) => {
       const txt = await r.text();
@@ -32,9 +30,7 @@ const Menu: React.FC = () => {
     })();
   }, []);
 
-  // ------------------------------------------------------------------
-  // HELPERI
-  // ------------------------------------------------------------------
+ 
   const byCategory = (id: string) =>
     products.filter((p) =>
       typeof p.category === 'string'
@@ -48,12 +44,9 @@ const Menu: React.FC = () => {
   const handleAdd = (id: string) => {
     const amount = qty[id] || 0;
     console.log(`Dodajem ${amount} kom. proizvoda ${id} u korpu`);
-    // TODO: dispatch / service call
   };
 
-  // ------------------------------------------------------------------
-  // RENDER
-  // ------------------------------------------------------------------
+
   return (
     <div className="menu-container">
       {categories.map((c) => (
@@ -68,7 +61,6 @@ const Menu: React.FC = () => {
                 <p>{p.description}</p>
                 <span className="price">{p.price} RSD</span>
 
-                {/* -------- kontrole -------- */}
                 <div className="cart-controls">
                   <button
                     className="ctrl-btn"
