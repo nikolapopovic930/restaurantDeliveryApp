@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { useUser } from "../context/UserContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, setUser } = useUser();
+  const navigate = useNavigate();
 
-  const logout = () => {
-    setUser(null);
-    setIsOpen(false);
-  };
+const logout = () => {
+  setUser(null);
+  setIsOpen(false);
+  navigate("/"); // preusmerenje na home
+};
 
   return (
     <nav className="navbar">

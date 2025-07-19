@@ -53,4 +53,20 @@ router
     cartController.removeFromCart
   );
 
+router
+  .route("/decrease")
+  .post(
+    authController.protect,
+    authController.allowedFor("user"),
+    cartController.decreaseFromCart
+  );
+
+router
+  .route("/increase")
+  .post(
+    authController.protect,
+    authController.allowedFor("user"),
+    cartController.increaseFromCart
+  );
+
 module.exports = router;

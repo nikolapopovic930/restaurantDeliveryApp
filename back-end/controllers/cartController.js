@@ -154,3 +154,74 @@ exports.getMyCart = catchAsync(async (req, res, next) => {
     totalPrice,
   });
 });
+
+exports.decreaseFromCart = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findById(req.user.cart[0]._id);
+
+  if (!cart) {
+    return next(new AppError("No cart found with that ID", 404));
+  }
+
+  const updatedProducts = cart.products
+    .map((item) => {
+      const obj = item.toObject();
+      if (item.productId.toString() === req.body.productId) {
+        obj.quantity = item.quantity - 1;
+      }
+      return obj;
+    })
+    .filter((item) => item.quantity > 0);
+
+  const doc = await Cart.findByIdAndUpdate(
+    cart._id,
+    { products: updatedProducts },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!doc) {
+    return next(new AppError("No document found with that ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: { data: doc },
+  });
+});
+
+exports.increaseFromCart = catchAsync(async (req, res, next) => {
+  const cart = await Cart.findById(req.user.cart[0]._id);
+
+  if (!cart) {
+    return next(new AppError("No cart found with that ID", 404));
+  }
+
+  const updatedProducts = cart.products
+    .map((item) => {
+      const obj = item.toObject();
+      if (item.productId.toString() === req.body.productId) {
+        obj.quantity = item.quantity + 1;
+      }
+      return obj;
+    });
+
+  const doc = await Cart.findByIdAndUpdate(
+    cart._id,
+    { products: updatedProducts },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!doc) {
+    return next(new AppError("No document found with that ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: { data: doc },
+  });
+});

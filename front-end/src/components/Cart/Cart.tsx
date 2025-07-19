@@ -7,10 +7,10 @@ import { useUser } from '../context/UserContext';
 
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<ICart | null>(null);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
   const navigate = useNavigate();
   const { user } = useUser();
-  const [showButton, setShowButton] = useState(false);   // modal state
-
+  const [showButton, setShowButton] = useState(false);
 
   const getId = (p: ICartProduct) =>
     typeof p.productId === 'string' ? p.productId : p.productId._id!;
@@ -34,7 +34,7 @@ const Cart: React.FC = () => {
         ? {
             ...c,
             products: c.products.map((p) =>
-               getId(p) === id
+              getId(p) === id
                 ? { ...p, quantity: Math.max(p.quantity - 1, 0) }
                 : p
             ),
@@ -68,24 +68,24 @@ const Cart: React.FC = () => {
           const c = await parse(
             await fetch('http://localhost:3000/api/v1/carts/my-cart/', {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json', 
+        headers: { 'Content-Type': 'application/json',
           "Authorization": `Bearer ${user?.token}` }
       }),
             'cart'
           );
           setCart(c.data?.data);
+          if (typeof c.totalPrice === 'number') setTotalPrice(c.totalPrice);
         } catch (e) {
           console.error(e);
         }
       })();
   }, [user]);
-  
+
  useEffect(() => {
     setShowButton(!!cart && cart.products.length > 0);
   }, [cart]);
 
   if (!cart || cart.products.length === 0) {
-
 
     return (
       <div className="cart-container">
@@ -93,7 +93,6 @@ const Cart: React.FC = () => {
       </div>
     );
     }
-
 
   return (
     <div className="cart-container">
@@ -142,6 +141,9 @@ const Cart: React.FC = () => {
           </div>
         );
       })}
+      <div className="total-price">
+        Ukupna cena: {totalPrice.toLocaleString('sr-RS')} RSD
+      </div>
 
       <button className="checkout-btn" onClick={() => navigate('/order')}>
         Poruči

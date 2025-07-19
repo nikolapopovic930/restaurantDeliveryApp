@@ -54,46 +54,76 @@
   gap: 8px;
 }
 
-/* ---------- DUGMAD (‑  +  ×) ---------- */
+/* ---------- UNAPREĐENI STIL DUGMIĆA ---------- */
 .ctrl-btn,
 .remove-btn {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #000;
-  background: #fff;
-  border: 1px solid var(--border-clr, #ccc);
-  border-radius: 4px;
-  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.ctrl-btn:hover:not(:disabled),
+.remove-btn:hover {
+  background: #eaeaea;
+  transform: scale(1.05);
+  border-color: #aaa;
+}
+
+.ctrl-btn:active,
+.remove-btn:active {
+  background: #ddd;
+  transform: scale(0.97);
 }
 
 .ctrl-btn:disabled {
   opacity: 0.4;
-  cursor: default;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* ✔ NEUTRALNI HOVER (blago sivi) */
-.ctrl-btn:not(:disabled):hover,
+/* Opcionalno crvenkasto za "×" dugme */
+.remove-btn {
+  color: #a00;
+}
+
 .remove-btn:hover {
-  background: #f2f2f2;   /* svetlo‑siva, neutralna */
-  border-color: #bbb;    /* malo tamnija ivica za feedback */
+  background: #fbeaea;
+  border-color: #d99;
 }
 
-/* ---------- CHECK‑OUT ---------- */
+/* ---------- NARANDŽASTO DUGME "PORUČI" ---------- */
 .checkout-btn {
   margin-top: 30px;
   padding: 12px 32px;
   font-size: 1rem;
   font-weight: 600;
   color: #fff;
+  background: #f57c00; /* narandžasta */
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   display: block;
   margin-left: auto;
+}
+
+.checkout-btn:hover {
+  background: #ef6c00; /* tamnija narandžasta */
+  transform: scale(1.02);
+}
+
+/* ---------- TOTAL PRICE ---------- */
+.total-price {
+  margin-top: 20px;
+  font-weight: 600;
+  text-align: center;
 }
 

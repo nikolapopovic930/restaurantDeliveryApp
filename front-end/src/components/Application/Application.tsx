@@ -16,19 +16,22 @@ function Application() {
   return (
     <UserProvider>
     <BrowserRouter>
-    <Navbar/>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/my-cart" element={<Cart />} />
-        <Route path="/order" element={<Order />} />
-      
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+        <div className="app-container">
+          <Navbar />
+          <main className="main-content">
+            <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/my-cart" element={<Cart />} />
+            <Route path="/order" element={<Order />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </BrowserRouter>
     </UserProvider>
   
   );

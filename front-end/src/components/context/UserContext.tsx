@@ -2,25 +2,23 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import IUser from '../../models/IUser.model';
 
 interface IUserContext {
-  user: IUser | null;
+  user:  IUser| null;
   setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
 }
 
 const UserContext = createContext<IUserContext | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<IUser | null>(null);
-
-  useEffect(() => {
+  const [user, setUser] = useState<IUser | null>(() => {
     const stored = localStorage.getItem('user');
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch (_) {
-        localStorage.removeItem('user');
-      }
+    if (!stored) return null;
+    try {
+      return JSON.parse(stored);
+    } catch {
+      localStorage.removeItem('user');
+      return null;
     }
-  }, []);
+  });
 
   useEffect(() => {
     if (user) {

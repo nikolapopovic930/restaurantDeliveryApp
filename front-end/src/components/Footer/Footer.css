@@ -3,10 +3,9 @@
   background-color: white;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
   padding: 20px 0;
-  position: relative;
-  bottom: 0;
   width: 100%;
   font-family: Arial, sans-serif;
+  margin-top: auto;
 }
 
 .footer-container {
