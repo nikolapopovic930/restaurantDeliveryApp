@@ -1,6 +1,9 @@
+import IProduct from "./IProduct.model";
+
 export interface ICartProduct {
-  productId: string;
+  productId: string | IProduct;
   quantity: number;
+  price?: number;
 }
 
 export default interface ICart {

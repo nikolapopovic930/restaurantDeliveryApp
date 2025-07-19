@@ -89,7 +89,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
       return next(
         new AppError(
           `You must have products in your cart to place an order!`,
-          401
+          400
         )
       );
     }

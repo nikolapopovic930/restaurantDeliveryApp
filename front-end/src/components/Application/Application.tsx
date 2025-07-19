@@ -10,9 +10,11 @@ import Footer from '../Footer/Footer';
 import Menu from '../Menu/Menu';
 import Cart from '../Cart/Cart';
 import Order from '../Order/Order';
+import { UserProvider } from '../context/UserContext';
 
 function Application() {
   return (
+    <UserProvider>
     <BrowserRouter>
     <Navbar/>
       <Routes>
@@ -21,12 +23,13 @@ function Application() {
         <Route path="/register" element={<Register />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/cart/:id" element={<Cart />} />
+        <Route path="/my-cart" element={<Cart />} />
         <Route path="/order" element={<Order />} />
       
       </Routes>
       <Footer />
     </BrowserRouter>
+    </UserProvider>
   
   );
 }

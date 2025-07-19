@@ -17,7 +17,11 @@ router
     cartController.createCart
   );
 
-router.route("/my-cart").get(authController.protect, cartController.getMyCart);
+router
+  .route("/my-cart")
+  .get(authController.protect, 
+    cartController.getMyCart
+  );
 
 router
   .route("/:id")

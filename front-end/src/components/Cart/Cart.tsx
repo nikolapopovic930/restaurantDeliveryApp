@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IProduct from '../../models/IProduct.model';
-import ICart from '../../models/ICart.model';
+import ICart, { ICartProduct } from '../../models/ICart.model';
 import './Cart.css';
-
-const CART_ID = '6838cbdac686d31a49dc81fd';
+import { useUser } from '../context/UserContext';
 
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<ICart | null>(null);
-  const [products, setProducts] = useState<Record<string, IProduct>>({});
   const navigate = useNavigate();
+  const { user } = useUser();
+  const [showButton, setShowButton] = useState(false);   // modal state
+
+
+  const getId = (p: ICartProduct) =>
+    typeof p.productId === 'string' ? p.productId : p.productId._id!;
 
   /** ---------- HELPER FUNKCIJE ---------- */
   const inc = (id: string) =>
@@ -18,7 +22,7 @@ const Cart: React.FC = () => {
         ? {
             ...c,
             products: c.products.map((p) =>
-              p.productId === id ? { ...p, quantity: p.quantity + 1 } : p
+              getId(p) === id ? { ...p, quantity: p.quantity + 1 } : p
             ),
           }
         : c
@@ -30,7 +34,7 @@ const Cart: React.FC = () => {
         ? {
             ...c,
             products: c.products.map((p) =>
-              p.productId === id
+               getId(p) === id
                 ? { ...p, quantity: Math.max(p.quantity - 1, 0) }
                 : p
             ),
@@ -40,11 +44,15 @@ const Cart: React.FC = () => {
 
   const remove = (id: string) =>
     setCart((c) =>
-      c ? { ...c, products: c.products.filter((p) => p.productId !== id) } : c
+      c ? { ...c, products: c.products.filter((p) => getId(p) !== id) } : c
     );
 
   /** ---------- FETCH PODACI ---------- */
   useEffect(() => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     const parse = async (r: Response, lbl: string) => {
       const txt = await r.text();
       if (!r.ok) throw new Error(`Failed to load ${lbl}: ${r.status} ${txt}`);
@@ -56,35 +64,45 @@ const Cart: React.FC = () => {
     };
 
     (async () => {
-      try {
-        const c = await parse(
-          await fetch(`http://localhost:3000/api/v1/carts/${CART_ID}`),
-          'cart'
-        );
-        setCart(c.data?.data);
+        try {
+          const c = await parse(
+            await fetch('http://localhost:3000/api/v1/carts/my-cart/', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', 
+          "Authorization": `Bearer ${user?.token}` }
+      }),
+            'cart'
+          );
+          setCart(c.data?.data);
+        } catch (e) {
+          console.error(e);
+        }
+      })();
+  }, [user]);
+  
+ useEffect(() => {
+    setShowButton(!!cart && cart.products.length > 0);
+  }, [cart]);
 
-        const prod = await parse(
-          await fetch('http://localhost:3000/api/v1/products'),
-          'products'
-        );
-        const map: Record<string, IProduct> = {};
-        for (const p of prod.data?.data || []) map[p._id!] = p;
-        setProducts(map);
-      } catch (e) {
-        console.error(e);
-      }
-    })();
-  }, []);
+  if (!cart || cart.products.length === 0) {
 
-  /** ---------- PRIKAZ ---------- */
-  if (!cart) return <div className="cart-container">Učitavanje...</div>;
+
+    return (
+      <div className="cart-container">
+        <h2>Vaša korpa je prazna</h2>
+      </div>
+    );
+    }
+
 
   return (
     <div className="cart-container">
       {cart.products.map((item, idx) => {
-        const product = products[item.productId];
+        const id = getId(item);
+        const product =
+          typeof item.productId === 'string' ? null : (item.productId as any);
         return (
-          <div key={idx} className="cart-item">
+          <div key={id || idx} className="cart-item">
             {/* IMG + NAZIV */}
             <div className="item-info">
               {product && (
@@ -94,33 +112,31 @@ const Cart: React.FC = () => {
                   loading="lazy"
                 />
               )}
-              <span className="item-name">
-                {product ? product.name : item.productId}
-              </span>
+              <span className="item-name">{product ? product.name : id}</span>
             </div>
 
             {/* CENA */}
             <span className="item-price">
-              {product ? product.price.toLocaleString('sr-RS') : '—'} RSD
+              {product ? item.price?.toLocaleString('sr-RS') : '—'} RSD
             </span>
 
             {/* KOLIČINA */}
             <div className="item-qty">
               <button
                 className="ctrl-btn"
-                onClick={() => dec(item.productId)}
+                onClick={() => dec(id)}
                 disabled={!item.quantity}
               >
                 –
               </button>
               <span className="qty">{item.quantity}</span>
-              <button className="ctrl-btn" onClick={() => inc(item.productId)}>
+              <button className="ctrl-btn" onClick={() => inc(id)}>
                 +
               </button>
             </div>
 
             {/* UKLONI */}
-            <button className="remove-btn" onClick={() => remove(item.productId)}>
+            <button className="remove-btn" onClick={() => remove(id)}>
               ×
             </button>
           </div>

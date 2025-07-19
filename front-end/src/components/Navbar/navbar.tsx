@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
+import { useUser } from "../context/UserContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const cartId = '683851bc7692433464ed548e';
+  const { user, setUser } = useUser();
+
+  const logout = () => {
+    setUser(null);
+    setIsOpen(false);
+  };
 
   return (
     <nav className="navbar">
@@ -27,24 +33,35 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="nav-item">
-            <Link
-              to={`/cart/${cartId}`}
-              className="nav-link cart-icon"
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to="/my-cart" className="nav-link cart-icon" onClick={() => setIsOpen(false)}>
               <i className="fas fa-shopping-cart"></i>
             </Link>
           </li>
-          <li className="nav-item">
-            <Link to="/login" className="nav-link" onClick={() => setIsOpen(false)}>
-              Prijava
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/register" className="nav-link" onClick={() => setIsOpen(false)}>
-              Registracija
-            </Link>
-          </li>
+          {user ? (
+            <>
+              <li className="nav-item user-name">
+                <span>Pozdrav, {user.firstName}</span>
+              </li>
+              <li className="nav-item">
+                <button className="nav-button" onClick={logout}>
+                  Odjava
+                </button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="nav-item">
+                <Link to="/login" className="nav-link" onClick={() => setIsOpen(false)}>
+                  Prijava
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/register" className="nav-link" onClick={() => setIsOpen(false)}>
+                  Registracija
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </nav>

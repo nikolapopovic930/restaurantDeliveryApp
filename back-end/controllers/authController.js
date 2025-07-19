@@ -96,7 +96,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  if (!token) {
+  if (!token || token === "undefined") {
     return next(
       new AppError("User is not logged in. Please log in to get access.", 401)
     );

@@ -1,17 +1,18 @@
 import React, { FormEvent, useState } from 'react';
 import './Login.css';
+import { useUser } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
-  const [user, setUser] = useState(null);
-  const [username , setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { setUser } = useUser();
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [form, setForm] = useState({
       username: "",
       password: ""
     });
+  const navigate = useNavigate();
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,9 +53,11 @@ const Login = () => {
         throw new Error('Fetching user failed');
       }
       const userdata = await userResponse.json();
-      setUser(userdata);
-
+      userdata.data.data.token =  data.token;
+      setUser(userdata.data.data);
+      console.log('User logged in:', userdata.data.data);
       setSuccess(true);
+      navigate('/');
     } catch (err) {
       console.error(err);
       setError(true);

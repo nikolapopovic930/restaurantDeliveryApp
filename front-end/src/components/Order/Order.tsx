@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Order.css";          // postojeći stilovi
+import { useUser } from "../context/UserContext";
 
 const Order: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Order: React.FC = () => {
   });
   const [modalMessage, setModalMessage] = useState<string>('');
   const [modalTitle, setModalTitle] = useState<string>('');
+  const { user, setUser } = useUser();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -25,12 +27,14 @@ const Order: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+
     try {
       const res = await fetch(
         "http://localhost:3000/api/v1/orders/placeOrder",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            "Authorization": `Bearer ${user?.token}` },
           body: JSON.stringify({
             deliveryInfo: {
               address: form.address,

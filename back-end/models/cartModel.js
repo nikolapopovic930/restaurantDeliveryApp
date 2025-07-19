@@ -10,23 +10,23 @@ const cartSchema = new mongoose.Schema({
         required: true,
       },
       quantity: { type: Number, required: true },
-      price: { type: Number, required: true },
+      price: { type: Number },
     },
   ],
   userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
   },
   status: {
     type: String,
-    enum: ['closed', 'active'],
-    default:'active',
+    enum: ["closed", "active"],
+    default: "active",
     trim: true,
-  }
+  },
 });
 
 const Cart = mongoose.model("Cart", cartSchema);

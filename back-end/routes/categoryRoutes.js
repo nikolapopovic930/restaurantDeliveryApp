@@ -10,6 +10,11 @@ router
   .post(authController.protect, authController.allowedFor('admin'), categoryController.createCategory);
 
 router
+  .route('/products')
+  .get(categoryController.getAllCategoryWithProducts);
+
+
+router
   .route('/:id')
   .get(categoryController.getCategory)
   .patch(authController.protect, authController.allowedFor('admin'), categoryController.updateCategory)
