@@ -15,70 +15,91 @@ const Cart: React.FC = () => {
   const getId = (p: ICartProduct) =>
     typeof p.productId === 'string' ? p.productId : p.productId._id!;
 
+  const parse = async (r: Response, lbl: string) => {
+    const txt = await r.text();
+    if (!r.ok) throw new Error(`Failed to load ${lbl}: ${r.status} ${txt}`);
+    try {
+      return JSON.parse(txt);
+    } catch {
+      throw new Error(`${lbl} returned invalid JSON: ${txt.slice(0, 100)}`);
+    }
+  };
+
+  const fetchCart = async () => {
+    try {
+      const c = await parse(
+        await fetch('http://localhost:3000/api/v1/carts/my-cart/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }),
+        'cart'
+      );
+      setCart(c.data?.data);
+      if (typeof c.totalPrice === 'number') setTotalPrice(c.totalPrice);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   /** ---------- HELPER FUNKCIJE ---------- */
-  const inc = (id: string) =>
-    setCart((c) =>
-      c
-        ? {
-            ...c,
-            products: c.products.map((p) =>
-              getId(p) === id ? { ...p, quantity: p.quantity + 1 } : p
-            ),
-          }
-        : c
-    );
+  const increaseItem = async (id: string) => {
+    try {
+      await fetch('http://localhost:3000/api/v1/carts/increase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({ productId: id }),
+      });
+      await fetchCart();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-  const dec = (id: string) =>
-    setCart((c) =>
-      c
-        ? {
-            ...c,
-            products: c.products.map((p) =>
-              getId(p) === id
-                ? { ...p, quantity: Math.max(p.quantity - 1, 0) }
-                : p
-            ),
-          }
-        : c
-    );
+  const decreaseItem = async (id: string) => {
+    try {
+      await fetch('http://localhost:3000/api/v1/carts/decrease', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({ productId: id }),
+      });
+      await fetchCart();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-  const remove = (id: string) =>
-    setCart((c) =>
-      c ? { ...c, products: c.products.filter((p) => getId(p) !== id) } : c
-    );
+  const removeItem = async (id: string) => {
+    try {
+      await fetch('http://localhost:3000/api/v1/carts/remove', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({ productId: id }),
+      });
+      await fetchCart();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-  /** ---------- FETCH PODACI ---------- */
   useEffect(() => {
     if (!user) {
       navigate('/login');
       return;
     }
-    const parse = async (r: Response, lbl: string) => {
-      const txt = await r.text();
-      if (!r.ok) throw new Error(`Failed to load ${lbl}: ${r.status} ${txt}`);
-      try {
-        return JSON.parse(txt);
-      } catch {
-        throw new Error(`${lbl} returned invalid JSON: ${txt.slice(0, 100)}`);
-      }
-    };
 
-    (async () => {
-        try {
-          const c = await parse(
-            await fetch('http://localhost:3000/api/v1/carts/my-cart/', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json',
-          "Authorization": `Bearer ${user?.token}` }
-      }),
-            'cart'
-          );
-          setCart(c.data?.data);
-          if (typeof c.totalPrice === 'number') setTotalPrice(c.totalPrice);
-        } catch (e) {
-          console.error(e);
-        }
-      })();
+  fetchCart();
   }, [user]);
 
  useEffect(() => {
@@ -123,19 +144,19 @@ const Cart: React.FC = () => {
             <div className="item-qty">
               <button
                 className="ctrl-btn"
-                onClick={() => dec(id)}
+                onClick={() => decreaseItem(id)}
                 disabled={!item.quantity}
               >
                 –
               </button>
               <span className="qty">{item.quantity}</span>
-              <button className="ctrl-btn" onClick={() => inc(id)}>
+              <button className="ctrl-btn" onClick={() => increaseItem(id)}>
                 +
               </button>
             </div>
 
             {/* UKLONI */}
-            <button className="remove-btn" onClick={() => remove(id)}>
+            <button className="remove-btn" onClick={() => removeItem(id)}>
               ×
             </button>
           </div>

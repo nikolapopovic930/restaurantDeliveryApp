@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Order.css";          // postojeći stilovi
+import "./Order.css";
 import { useUser } from "../context/UserContext";
+import Modal from "../Modal/Modal";
 
 const Order: React.FC = () => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);   // modal state
+  const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState({
     address: "",
     city: "",
@@ -13,63 +14,84 @@ const Order: React.FC = () => {
     phone: "",
     note: "",
   });
+
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
   const [modalMessage, setModalMessage] = useState<string>('');
   const [modalTitle, setModalTitle] = useState<string>('');
-  const { user, setUser } = useUser();
+  const { user } = useUser();
+
+  const fieldNames: { [key: string]: string } = {
+    address: "adresu",
+    city: "grad",
+    country: "državu",
+    phone: "broj telefona",
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { id, value } = e.target;
     setForm((f) => ({ ...f, [id]: value }));
+    setFieldErrors((prev) => ({ ...prev, [id]: "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const newErrors: { [key: string]: string } = {};
+
+    // Validacija praznih obaveznih polja (note je opciono)
+    Object.entries(form).forEach(([key, value]) => {
+      if (key !== "note" && !value.trim()) {
+        const label = fieldNames[key] || "polje";
+        newErrors[key] = `Morate uneti ${label}`;
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
+      return;
+    }
 
     try {
-      const res = await fetch(
-        "http://localhost:3000/api/v1/orders/placeOrder",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json",
-            "Authorization": `Bearer ${user?.token}` },
-          body: JSON.stringify({
-            deliveryInfo: {
-              address: form.address,
-              city: form.city,
-              country: form.country,
-              phoneNumber: form.phone,
-              note: form.note,
-            },
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:3000/api/v1/orders/placeOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({
+          deliveryInfo: {
+            address: form.address,
+            city: form.city,
+            country: form.country,
+            phoneNumber: form.phone,
+            note: form.note,
+          },
+        }),
+      });
 
       if (!res.ok) {
         setIsOpen(true);
-        setModalMessage ('Greska prilikom slanja narudžbine');
-        setModalTitle ('Izvinjavamo se!');
+        setModalTitle("Izvinjavamo se!");
+        setModalMessage("Greška prilikom slanja narudžbine");
         return;
       }
 
       setIsOpen(true);
-      setModalMessage ('Vaša narudžbina je uspešno poslata!');
-      setModalTitle ('Hvala!');
-
+      setModalTitle("Hvala!");
+      setModalMessage("Vaša narudžbina je uspešno poslata!");
     } catch (err) {
       console.error(err);
       setIsOpen(true);
-      setModalMessage ('Greska prilikom slanja narudžbine');
-      setModalTitle ('Izvinjavamo se!');
-      return;
+      setModalTitle("Izvinjavamo se!");
+      setModalMessage("Greška prilikom slanja narudžbine");
     }
   };
 
   const handleOk = () => {
-    setIsOpen(false);                           
-    navigate("/");                              
+    setIsOpen(false);
+    navigate("/");
   };
 
   return (
@@ -83,10 +105,11 @@ const Order: React.FC = () => {
             <input
               type="text"
               id="address"
-              required
               value={form.address}
               onChange={handleChange}
+              className={fieldErrors.address ? "input-error" : ""}
             />
+            {fieldErrors.address && <p className="error-msg">{fieldErrors.address}</p>}
           </div>
 
           <div className="order-group">
@@ -94,10 +117,11 @@ const Order: React.FC = () => {
             <input
               type="text"
               id="city"
-              required
               value={form.city}
               onChange={handleChange}
+              className={fieldErrors.city ? "input-error" : ""}
             />
+            {fieldErrors.city && <p className="error-msg">{fieldErrors.city}</p>}
           </div>
 
           <div className="order-group">
@@ -105,10 +129,11 @@ const Order: React.FC = () => {
             <input
               type="text"
               id="country"
-              required
               value={form.country}
               onChange={handleChange}
+              className={fieldErrors.country ? "input-error" : ""}
             />
+            {fieldErrors.country && <p className="error-msg">{fieldErrors.country}</p>}
           </div>
 
           <div className="order-group">
@@ -116,10 +141,11 @@ const Order: React.FC = () => {
             <input
               type="tel"
               id="phone"
-              required
               value={form.phone}
               onChange={handleChange}
+              className={fieldErrors.phone ? "input-error" : ""}
             />
+            {fieldErrors.phone && <p className="error-msg">{fieldErrors.phone}</p>}
           </div>
 
           <div className="order-group">
@@ -132,23 +158,15 @@ const Order: React.FC = () => {
             ></textarea>
           </div>
 
-          <button type="submit" className="order-button">
-            Naruči
-          </button>
+          <button type="submit" className="order-button">Naruči</button>
         </form>
       </div>
-
-      {isOpen && (
-        <div className="modal-overlay">
-          <div className="modal-card">
-            <h3>{modalTitle}</h3>
-            <p>{modalMessage}</p>
-            <button onClick={handleOk} className="modal-btn">
-              OK
-            </button>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isOpen}
+        title={modalTitle}
+        message={modalMessage}
+        onClose={handleOk}
+      />
     </>
   );
 };

@@ -3,7 +3,7 @@ import IProduct from '../../models/IProduct.model';
 import ICategories from '../../models/ICategories.model';
 import './Menu.css';
 import { useUser } from '../context/UserContext';
- // ⬅️ import user context
+import Modal from '../Modal/Modal';
 
 interface ICategoryWithProducts extends ICategories {
   products: IProduct[];
@@ -12,7 +12,10 @@ interface ICategoryWithProducts extends ICategories {
 const Menu: React.FC = () => {
   const [categories, setCategories] = useState<ICategoryWithProducts[]>([]);
   const [qty, setQty] = useState<Record<string, number>>({});
-  const { user } = useUser(); // ⬅️ uzimamo token
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const { user } = useUser();
 
   useEffect(() => {
     const parse = async (r: Response, lbl: string) => {
@@ -45,12 +48,19 @@ const Menu: React.FC = () => {
     const amount = qty[id] || 0;
     if (amount <= 0) return;
 
+      if (!user) {
+        setModalTitle('Greška');
+        setModalMessage('Morate se ulogovati da bi dodavali proizvode u korpu');
+        setModalOpen(true);
+        return;
+    }
+
     try {
       const res = await fetch('http://localhost:3000/api/v1/carts/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user?.token}`, // ⬅️ dodajemo token
+          'Authorization': `Bearer ${user?.token}`,
         },
         body: JSON.stringify({
           productId: id,
@@ -58,21 +68,21 @@ const Menu: React.FC = () => {
         }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Greška prilikom dodavanja u korpu');
-      }
-
       setQty((q) => ({ ...q, [id]: 0 }));
-      alert(`Uspešno dodato ${amount} kom. u korpu`);
+        setModalTitle('Uspešno ste dodali proizvod u korpu');
+        setModalMessage('');
+        setModalOpen(true);
+        return;
     } catch (err) {
       console.error('Greška:', err);
       alert('Došlo je do greške prilikom dodavanja u korpu');
     }
   };
 
+  const handleClose = () => setModalOpen(false);
+
   return (
+    <>
     <div className="menu-container">
       {categories.map((c) => (
         <div key={c._id} className="menu-category">
@@ -115,6 +125,13 @@ const Menu: React.FC = () => {
         </div>
       ))}
     </div>
+    <Modal
+      isOpen={modalOpen}
+      title={modalTitle}
+      message={modalMessage}
+      onClose={handleClose}
+    />
+    </>
   );
 };
 
