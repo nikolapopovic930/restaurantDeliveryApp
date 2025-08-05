@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import './Login.css';
-import { useUser } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../components/context/UserContext';
 
 const Login = () => {
   const { setUser } = useUser();
@@ -18,15 +18,15 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { id, value } = e.target;
-    setForm((f) => ({ ...f, [id]: value }));
-    setFieldErrors((prev) => ({ ...prev, [id]: '' })); // Resetuje grešku prilikom unosa
+    const { id, value } = event.target;
+    setForm((form) => ({ ...form, [id]: value }));
+    setFieldErrors((prev) => ({ ...prev, [id]: '' }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
     setError(false);
     setSuccess(false);
     setFieldErrors({ username: '', password: '' });

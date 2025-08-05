@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Order.css";
-import { useUser } from "../context/UserContext";
-import Modal from "../Modal/Modal";
+import { useUser } from "../../components/context/UserContext";
+import Modal from "../../components/Modal/Modal";
+
 
 const Order: React.FC = () => {
   const navigate = useNavigate();
@@ -28,19 +29,18 @@ const Order: React.FC = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { id, value } = e.target;
-    setForm((f) => ({ ...f, [id]: value }));
+    const { id, value } = event.target;
+    setForm((form) => ({ ...form, [id]: value }));
     setFieldErrors((prev) => ({ ...prev, [id]: "" }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     const newErrors: { [key: string]: string } = {};
 
-    // Validacija praznih obaveznih polja (note je opciono)
     Object.entries(form).forEach(([key, value]) => {
       if (key !== "note" && !value.trim()) {
         const label = fieldNames[key] || "polje";

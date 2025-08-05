@@ -1,25 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Carousel from "../../Carousel/Carousel";
 import "./Home.css";
+import Carousel from "../../components/Carousel/Carousel";
 
 export default function Home() {
   return (
     <div className="home-wrapper">
 
-      {/* ---------- CAROUSEL ---------- */}
       <section className="carousel-section">
         <Carousel />
       </section>
 
-      {/* ---------- HERO (tekstualni) ---------- */}
       <section className="hero">
         <h1>Dobrodošli u <span>Moja Dostava</span></h1>
         <p>Najukusnija jela iz Vašeg omiljenog restorana - direktno na Vaša vrata.</p>
         <Link to="/menu" className="cta-btn">Pogledaj meni</Link>
       </section>
 
-      {/* ---------- FEATURES ---------- */}
       <section className="features">
         <div className="feature-card">
           <span className="emoji">🍅</span>

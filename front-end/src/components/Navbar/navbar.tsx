@@ -11,7 +11,7 @@ const Navbar = () => {
 const logout = () => {
   setUser(null);
   setIsOpen(false);
-  navigate("/"); // preusmerenje na home
+  navigate("/");
 };
 
   return (

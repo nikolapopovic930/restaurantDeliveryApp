@@ -1,16 +1,16 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './Home/Home';
 import './Application.css';
-import Navbar from '../Navbar/navbar';
-import Login from '../Login/Login';
-import Register from '../Register/Register';
-import AboutUs from '../AboutUs/AboutUs';
-import Footer from '../Footer/Footer';
-import Menu from '../Menu/Menu';
-import Cart from '../Cart/Cart';
-import Order from '../Order/Order';
-import { UserProvider } from '../context/UserContext';
+import AboutUs from './pages/AboutUs/AboutUs';
+import Footer from './components/Footer/Footer';
+import { UserProvider } from './components/context/UserContext';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import Order from './pages/Order/Order';
+import Menu from './pages/Menu/Menu';
+import Home from './pages/Home/Home';
+import Cart from './pages/Cart/Cart';
+import Navbar from './components/Navbar/Navbar';
 
 function Application() {
   return (

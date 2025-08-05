@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Application from './components/Application/Application';
+import Application from './Application';
 import reportWebVitals from './common/reportWebVitals';
 
 

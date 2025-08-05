@@ -1,7 +1,7 @@
 import React, { FormEvent, useState } from 'react';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';
-import Modal from '../Modal/Modal';
+import Modal from '../../components/Modal/Modal';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -39,15 +39,15 @@ const Register: React.FC = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { id, value } = e.target;
-    setForm((f) => ({ ...f, [id]: value }));
+    const { id, value } = event.target;
+    setForm((form) => ({ ...form, [id]: value }));
     setFieldErrors((prev) => ({ ...prev, [id]: '' }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
     setError(false);
 
     const newErrors: { [key: string]: string } = {};
@@ -59,7 +59,6 @@ const Register: React.FC = () => {
       }
     });
 
-    // Dodatne validacije:
     const nameRegex = /^[A-Za-zŠšĐđČčĆćŽž\s\-]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^\+?\d{8,}$/;

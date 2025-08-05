@@ -23,11 +23,11 @@ const Carousel: React.FC = () => {
       <img src={images[currentIndex]} alt={`Slika ${currentIndex + 1}`} />
 
       <div className="carousel-dots">
-        {images.map((_, idx) => (
+        {images.map((image, id) => (
           <span
-            key={idx}
-            className={idx === currentIndex ? "dot active" : "dot"}
-            onClick={() => setCurrentIndex(idx)}
+            key={id}
+            className={id === currentIndex ? "dot active" : "dot"}
+            onClick={() => setCurrentIndex(id)}
           />
         ))}
       </div>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import IProduct from '../../models/IProduct.model';
 import ICart, { ICartProduct } from '../../models/ICart.model';
 import './Cart.css';
-import { useUser } from '../context/UserContext';
+import { useUser } from '../../components/context/UserContext';
+
 
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<ICart | null>(null);
@@ -12,22 +12,22 @@ const Cart: React.FC = () => {
   const { user } = useUser();
   const [showButton, setShowButton] = useState(false);
 
-  const getId = (p: ICartProduct) =>
-    typeof p.productId === 'string' ? p.productId : p.productId._id!;
+  const getId = (product: ICartProduct) =>
+    typeof product.productId === 'string' ? product.productId : product.productId._id!;
 
-  const parse = async (r: Response, lbl: string) => {
-    const txt = await r.text();
-    if (!r.ok) throw new Error(`Failed to load ${lbl}: ${r.status} ${txt}`);
+  const parse = async (res: Response, label: string) => {
+    const txt = await res.text();
+    if (!res.ok) throw new Error(`Failed to load ${label}: ${res.status} ${txt}`);
     try {
       return JSON.parse(txt);
     } catch {
-      throw new Error(`${lbl} returned invalid JSON: ${txt.slice(0, 100)}`);
+      throw new Error(`${label} returned invalid JSON: ${txt.slice(0, 100)}`);
     }
   };
 
   const fetchCart = async () => {
     try {
-      const c = await parse(
+      const cart = await parse(
         await fetch('http://localhost:3000/api/v1/carts/my-cart/', {
           method: 'GET',
           headers: {
@@ -37,14 +37,13 @@ const Cart: React.FC = () => {
         }),
         'cart'
       );
-      setCart(c.data?.data);
-      if (typeof c.totalPrice === 'number') setTotalPrice(c.totalPrice);
-    } catch (e) {
-      console.error(e);
+      setCart(cart.data?.data);
+      if (typeof cart.totalPrice === 'number') setTotalPrice(cart.totalPrice);
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  /** ---------- HELPER FUNKCIJE ---------- */
   const increaseItem = async (id: string) => {
     try {
       await fetch('http://localhost:3000/api/v1/carts/increase', {
@@ -56,8 +55,8 @@ const Cart: React.FC = () => {
         body: JSON.stringify({ productId: id }),
       });
       await fetchCart();
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -72,8 +71,8 @@ const Cart: React.FC = () => {
         body: JSON.stringify({ productId: id }),
       });
       await fetchCart();
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -88,8 +87,8 @@ const Cart: React.FC = () => {
         body: JSON.stringify({ productId: id }),
       });
       await fetchCart();
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -123,7 +122,6 @@ const Cart: React.FC = () => {
           typeof item.productId === 'string' ? null : (item.productId as any);
         return (
           <div key={id || idx} className="cart-item">
-            {/* IMG + NAZIV */}
             <div className="item-info">
               {product && (
                 <img
@@ -135,19 +133,17 @@ const Cart: React.FC = () => {
               <span className="item-name">{product ? product.name : id}</span>
             </div>
 
-            {/* CENA */}
             <span className="item-price">
               {product ? item.price?.toLocaleString('sr-RS') : '—'} RSD
             </span>
 
-            {/* KOLIČINA */}
             <div className="item-qty">
               <button
                 className="ctrl-btn"
                 onClick={() => decreaseItem(id)}
                 disabled={!item.quantity}
               >
-                –
+                -
               </button>
               <span className="qty">{item.quantity}</span>
               <button className="ctrl-btn" onClick={() => increaseItem(id)}>
@@ -155,9 +151,8 @@ const Cart: React.FC = () => {
               </button>
             </div>
 
-            {/* UKLONI */}
             <button className="remove-btn" onClick={() => removeItem(id)}>
-              ×
+              x
             </button>
           </div>
         );
