@@ -1,10 +1,9 @@
-import ICategories from './ICategories.model';
-
+import ICategory from './ICategory.model';
 export default interface IProduct {
   _id?: string;
   name: string;
   price: number;
   description: string;
   imagePath: string;
-  category: ICategories | string;
+  category: ICategory | string;
 }

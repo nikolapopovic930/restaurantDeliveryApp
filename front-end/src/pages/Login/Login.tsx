@@ -1,7 +1,8 @@
 import React, { FormEvent, useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../components/context/UserContext';
+import { useUser } from '../../context/UserContext';
+import { login, getUser } from '../../services/userService';
 
 const Login = () => {
   const { setUser } = useUser();
@@ -46,37 +47,12 @@ const Login = () => {
     if (hasError) return;
 
     try {
-      const response = await fetch('http://localhost:3000/api/v1/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: form.username,
-          password: form.password,
-        }),
+      const data = await login({
+        username: form.username,
+        password: form.password,
       });
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
-      const data = await response.json();
-
-      const userResponse = await fetch(
-        `http://localhost:3000/api/v1/users/${data.userId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${data.token}`,
-          },
-        }
-      );
-
-      if (!userResponse.ok) {
-        throw new Error('Fetching user failed');
-      }
-
-      const userdata = await userResponse.json();
+      const userdata = await getUser(data.userId, data.token);
       userdata.data.data.token = data.token;
       setUser(userdata.data.data);
       setSuccess(true);

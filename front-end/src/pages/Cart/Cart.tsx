@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ICart, { ICartProduct } from '../../models/ICart.model';
 import './Cart.css';
-import { useUser } from '../../components/context/UserContext';
-
+import { useUser } from '../../context/UserContext';
+import {
+  getCart as getCartService,
+  increaseItem as increaseCartItem,
+  decreaseItem as decreaseCartItem,
+  removeItem as removeCartItem,
+} from '../../services/cartService';
 
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<ICart | null>(null);
@@ -15,28 +20,9 @@ const Cart: React.FC = () => {
   const getId = (product: ICartProduct) =>
     typeof product.productId === 'string' ? product.productId : product.productId._id!;
 
-  const parse = async (res: Response, label: string) => {
-    const txt = await res.text();
-    if (!res.ok) throw new Error(`Failed to load ${label}: ${res.status} ${txt}`);
-    try {
-      return JSON.parse(txt);
-    } catch {
-      throw new Error(`${label} returned invalid JSON: ${txt.slice(0, 100)}`);
-    }
-  };
-
   const fetchCart = async () => {
     try {
-      const cart = await parse(
-        await fetch('http://localhost:3000/api/v1/carts/my-cart/', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }),
-        'cart'
-      );
+      const cart = await getCartService(user?.token || '');
       setCart(cart.data?.data);
       if (typeof cart.totalPrice === 'number') setTotalPrice(cart.totalPrice);
     } catch (err) {
@@ -46,14 +32,7 @@ const Cart: React.FC = () => {
 
   const increaseItem = async (id: string) => {
     try {
-      await fetch('http://localhost:3000/api/v1/carts/increase', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({ productId: id }),
-      });
+      await increaseCartItem(id, user?.token || '');
       await fetchCart();
     } catch (err) {
       console.error(err);
@@ -62,14 +41,7 @@ const Cart: React.FC = () => {
 
   const decreaseItem = async (id: string) => {
     try {
-      await fetch('http://localhost:3000/api/v1/carts/decrease', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({ productId: id }),
-      });
+      await decreaseCartItem(id, user?.token || '');
       await fetchCart();
     } catch (err) {
       console.error(err);
@@ -78,14 +50,7 @@ const Cart: React.FC = () => {
 
   const removeItem = async (id: string) => {
     try {
-      await fetch('http://localhost:3000/api/v1/carts/remove', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({ productId: id }),
-      });
+      await removeCartItem(id, user?.token || '');
       await fetchCart();
     } catch (err) {
       console.error(err);

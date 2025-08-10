@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Order.css";
-import { useUser } from "../../components/context/UserContext";
+import { useUser } from "../../context/UserContext";
 import Modal from "../../components/Modal/Modal";
-
+import { placeOrder } from "../../services/orderService";
+import { isValidPhone } from "../../utils/validators";
 
 const Order: React.FC = () => {
   const navigate = useNavigate();
@@ -48,36 +49,26 @@ const Order: React.FC = () => {
       }
     });
 
+    if (form.phone && !isValidPhone(form.phone)) {
+          newErrors.phone = 'Unesite ispravan broj telefona (min. 8 cifara)';
+        }
+
     if (Object.keys(newErrors).length > 0) {
       setFieldErrors(newErrors);
       return;
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/v1/orders/placeOrder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${user?.token}`,
+      await placeOrder(
+        {
+          address: form.address,
+          city: form.city,
+          country: form.country,
+          phoneNumber: form.phone,
+          note: form.note,
         },
-        body: JSON.stringify({
-          deliveryInfo: {
-            address: form.address,
-            city: form.city,
-            country: form.country,
-            phoneNumber: form.phone,
-            note: form.note,
-          },
-        }),
-      });
-
-      if (!res.ok) {
-        setIsOpen(true);
-        setModalTitle("Izvinjavamo se!");
-        setModalMessage("Greška prilikom slanja narudžbine");
-        return;
-      }
-
+          user?.token || ""
+      );
       setIsOpen(true);
       setModalTitle("Hvala!");
       setModalMessage("Vaša narudžbina je uspešno poslata!");

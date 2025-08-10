@@ -1,4 +1,4 @@
-export default interface ICategories {
+export default interface ICategory {
     _id?: string,
     name: string,
     imagePath: string,

@@ -2,6 +2,8 @@ import React, { FormEvent, useState } from 'react';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
+import { signup } from '../../services/userService';
+import { isValidName, isValidPhone, isValidEmail, isUpperCase } from '../../utils/validators';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -59,32 +61,29 @@ const Register: React.FC = () => {
       }
     });
 
-    const nameRegex = /^[A-Za-zŠšĐđČčĆćŽž\s\-]+$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\+?\d{8,}$/;
-    const uppercaseRegex = /[A-ZČĆŠĐŽ]/;
+  
 
-    if (form.firstName && !nameRegex.test(form.firstName)) {
+    if (form.firstName && !isValidName(form.firstName)) {
       newErrors.firstName = 'Ime može sadržati samo slova';
     }
 
-    if (form.lastName && !nameRegex.test(form.lastName)) {
+    if (form.lastName && !isValidName(form.lastName)) {
       newErrors.lastName = 'Prezime može sadržati samo slova';
     }
 
     if (form.password) {
       if (form.password.length < 6) {
         newErrors.password = 'Lozinka mora imati najmanje 6 karaktera';
-      } else if (!uppercaseRegex.test(form.password)) {
+      } else if (!isUpperCase(form.password)) {
         newErrors.password = 'Lozinka mora sadržati bar jedno veliko slovo';
       }
     }
 
-    if (form.email && !emailRegex.test(form.email)) {
+    if (form.email && !isValidEmail(form.email)) {
       newErrors.email = 'Email nije u ispravnom formatu';
     }
 
-    if (form.phone && !phoneRegex.test(form.phone)) {
+    if (form.phone && !isValidPhone(form.phone)) {
       newErrors.phone = 'Unesite ispravan broj telefona (min. 8 cifara)';
     }
 
@@ -94,24 +93,18 @@ const Register: React.FC = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/api/v1/users/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: form.firstName,
-          lastName: form.lastName,
-          username: form.username,
-          password: form.password,
-          birthDate: form.birthdate,
-          address: form.address,
-          city: form.city,
-          country: form.country,
-          email: form.email,
-          phoneNumber: form.phone,
-        }),
+      await signup({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        username: form.username,
+        password: form.password,
+        birthDate: form.birthdate,
+        address: form.address,
+        city: form.city,
+        country: form.country,
+        email: form.email,
+        phoneNumber: form.phone,
       });
-
-      if (!res.ok) throw new Error('Registration failed');
       setModalOpen(true);
     } catch (err) {
       console.error(err);
@@ -228,7 +221,7 @@ const Register: React.FC = () => {
         <div className="reg-group">
           <label htmlFor="email">Email</label>
           <input
-            type="email"
+            type="text"
             id="email"
             value={form.email}
             onChange={handleChange}
@@ -240,7 +233,7 @@ const Register: React.FC = () => {
         <div className="reg-group">
           <label htmlFor="phone">Broj telefona</label>
           <input
-            type="tel"
+            type="text"
             id="phone"
             value={form.phone}
             onChange={handleChange}
